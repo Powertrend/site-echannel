@@ -18,8 +18,11 @@ export default function Countdown() {
     })
 
     useEffect(() => {
-        // Defina aqui a data de lançamento
-        const targetDate = new Date('2025-12-31T23:59:59')
+        // Lançamento em 6 meses a partir de out/2026
+        const startDate = new Date('2026-10-06T00:00:00')
+        const targetDate = new Date(startDate)
+        targetDate.setMonth(targetDate.getMonth() + 6)
+        targetDate.setHours(23, 59, 59, 0)
 
         const calculateTimeLeft = (): TimeLeft => {
             const now = new Date().getTime()
