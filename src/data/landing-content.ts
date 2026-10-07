@@ -1,3 +1,10 @@
+/** Número informado: 31993785549 → E.164 BR */
+export const whatsappPhoneE164 = '5531993785549'
+
+export function buildWhatsAppUrl(message: string): string {
+    return `https://wa.me/${whatsappPhoneE164}?text=${encodeURIComponent(message)}`
+}
+
 export const landingHero = {
     title: 'O shopping digital inteligente está chegando.',
     subtitle:
@@ -10,21 +17,24 @@ export const landingTracks = [
         title: 'Sou lojista',
         body: 'Operação e vendas dentro do mall digital: catálogo, fila, split financeiro e expedição integrada à doca.',
         cta: 'Quero ser loja fundadora',
-        href: 'mailto:contato@echannel.com.br?subject=Loja%20fundadora%20Echannel',
+        whatsappMessage:
+            'Olá! Sou lojista e quero ser loja fundadora no Echannel.',
     },
     {
         id: 'consumidor',
         title: 'Quero comprar',
         body: 'Experiência de shopping, não lista infinita: concierge, comparar, club VIP e retirada na baia.',
         cta: 'Entrar na lista VIP',
-        href: 'mailto:contato@echannel.com.br?subject=Lista%20VIP%20Echannel',
+        whatsappMessage:
+            'Olá! Quero entrar na lista VIP de abertura do Echannel.',
     },
     {
         id: 'shopping',
         title: 'Represento um shopping',
         body: 'Digitalize a operação do empreendimento: torre de controle, tenants, doca e dados do ecossistema.',
         cta: 'Falar com o time Echannel',
-        href: 'mailto:contato@echannel.com.br?subject=Shopping%20digital%20Echannel',
+        whatsappMessage:
+            'Olá! Represento um shopping e quero falar sobre o Echannel.',
     },
 ] as const
 

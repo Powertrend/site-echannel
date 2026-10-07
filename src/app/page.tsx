@@ -3,21 +3,25 @@
 import Image from 'next/image'
 import Countdown from '../components/Countdown'
 import {
+    buildWhatsAppUrl,
     landingCountdown,
     landingHero,
     landingTracks,
 } from '../data/landing-content'
 
+const whatsappButtonClass =
+    'mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-[#25D366] px-3 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-[#20bd5a] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/40'
+
 export default function Home() {
     return (
-        <div className='hero-bg min-h-screen flex justify-center items-center text-white relative py-24'>
-            <div className='absolute top-4 left-1/2 transform -translate-x-1/2'>
+        <div className='hero-bg relative flex min-h-screen items-center justify-center py-24 text-white'>
+            <div className='absolute top-4 left-1/2 -translate-x-1/2 transform'>
                 <Image
                     src='/echannel-logo.png'
                     alt='Logo Echannel'
                     width={384}
                     height={200}
-                    className='w-48 sm:w-64 md:w-96 h-auto'
+                    className='h-auto w-48 sm:w-64 md:w-96'
                     priority
                 />
             </div>
@@ -41,9 +45,15 @@ export default function Home() {
                                 {track.body}
                             </p>
                             <a
-                                href={track.href}
-                                className='mt-4 inline-flex items-center justify-center rounded-lg bg-white/95 px-3 py-2 text-sm font-semibold text-gray-900 transition hover:bg-white'
+                                href={buildWhatsAppUrl(track.whatsappMessage)}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                className={whatsappButtonClass}
                             >
+                                <i
+                                    className='fab fa-whatsapp text-lg leading-none'
+                                    aria-hidden
+                                />
                                 {track.cta}
                             </a>
                         </article>
