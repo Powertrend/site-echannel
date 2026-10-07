@@ -2,42 +2,68 @@
 
 import Image from 'next/image'
 import Countdown from '../components/Countdown'
+import {
+    landingCountdown,
+    landingHero,
+    landingTracks,
+} from '../data/landing-content'
 
 export default function Home() {
     return (
-        <div className='hero-bg min-h-screen flex justify-center items-center text-white relative'>
-            {/* Logo */}
+        <div className='hero-bg min-h-screen flex justify-center items-center text-white relative py-24'>
             <div className='absolute top-4 left-1/2 transform -translate-x-1/2'>
                 <Image
                     src='/echannel-logo.png'
                     alt='Logo Echannel'
                     width={384}
                     height={200}
-                    className='w-48 sm:w-64 md:w-96 lg:w-96 xl:w-96 h-auto'
+                    className='w-48 sm:w-64 md:w-96 h-auto'
                     priority
                 />
             </div>
 
-            <div className='flex flex-col items-center text-center px-4'>
-                <h1 className='text-2xl sm:text-3xl md:text-4xl font-bold mt-8 mb-4 sm:mb-6 drop-shadow-lg'>
-                    O futuro do e-commerce é inteligente e já começou!
+            <div className='flex max-w-5xl flex-col items-center px-4 text-center'>
+                <h1 className='mt-8 mb-4 text-2xl font-bold drop-shadow-lg sm:mb-6 sm:text-3xl md:text-4xl'>
+                    {landingHero.title}
                 </h1>
-                <p className='text-xl sm:text-2xl font-semibold mb-6 drop-shadow-lg'>
-                    Entre nessa com a plataforma que usa dados e automação para
-                    fazer seu faturamento decolar!
+                <p className='mb-8 max-w-3xl text-base font-medium leading-relaxed drop-shadow-lg sm:text-lg md:text-xl'>
+                    {landingHero.subtitle}
                 </p>
 
-                {/* Countdown Timer */}
-                <Countdown />
-
-                <div className='flex text-2xl sm:text-3xl mb-6 drop-shadow-xl'>
-                    <h1 className='text-3xl sm:text-4xl font-bold mb-6 drop-shadow-xl'>
-                        Prepare-se para o Lançamento!
-                    </h1>
+                <div className='mb-10 grid w-full gap-4 sm:grid-cols-3'>
+                    {landingTracks.map((track) => (
+                        <article
+                            key={track.id}
+                            className='flex flex-col rounded-xl border border-white/25 bg-black/35 p-4 text-left backdrop-blur-sm'
+                        >
+                            <h2 className='text-lg font-bold'>{track.title}</h2>
+                            <p className='mt-2 flex-1 text-sm leading-relaxed text-white/90'>
+                                {track.body}
+                            </p>
+                            <a
+                                href={track.href}
+                                className='mt-4 inline-flex items-center justify-center rounded-lg bg-white/95 px-3 py-2 text-sm font-semibold text-gray-900 transition hover:bg-white'
+                            >
+                                {track.cta}
+                            </a>
+                        </article>
+                    ))}
                 </div>
 
-                {/* Social Media Links */}
-                <div className='mt-4 space-x-4 flex justify-center'>
+                <p className='text-lg font-semibold drop-shadow-lg sm:text-xl'>
+                    {landingCountdown.headline}
+                </p>
+                <p className='mt-2 mb-4 max-w-2xl text-sm text-white/90 sm:text-base'>
+                    {landingCountdown.note}
+                </p>
+
+                <Countdown />
+
+                <p className='mt-4 text-2xl font-bold drop-shadow-xl sm:text-3xl'>
+                    {landingCountdown.launchLabel}
+                </p>
+
+                <div className='mt-8 flex justify-center space-x-4'>
                     <a
                         href='#'
                         className='text-gray-400 hover:text-white'

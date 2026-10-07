@@ -12,10 +12,18 @@ const geistMono = Geist_Mono({
     subsets: ['latin'],
 })
 
+const siteDescription =
+    'Para quem compra, vende ou opera um shopping. Descoberta com IA, lojas parceiras e operação integrada. Lista de abertura.'
+
 export const metadata: Metadata = {
     title: 'Echannel — Shopping digital inteligente',
-    description:
-        'Para quem compra, vende ou opera um shopping. Descoberta com IA, lojas parceiras e operação integrada. Lista de abertura.',
+    description: siteDescription,
+    openGraph: {
+        title: 'Echannel — Shopping digital inteligente',
+        description: siteDescription,
+        locale: 'pt_BR',
+        type: 'website',
+    },
 }
 
 export default function RootLayout({
