@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-    title: 'Echannel - Shopping',
-    description: 'O futuro do e-commerce é inteligente e já começou!',
+    title: 'Echannel — Shopping digital inteligente',
+    description:
+        'Para quem compra, vende ou opera um shopping. Descoberta com IA, lojas parceiras e operação integrada. Lista de abertura.',
 }
 
 export default function RootLayout({
