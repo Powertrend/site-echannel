@@ -34,6 +34,10 @@ export default function RootLayout({
     return (
         <html lang='pt-BR'>
             <head>
+                <meta
+                    name='google-site-verification'
+                    content='9_hh6Xu5_gBgG35OqBv47Vc-Azpwv92YeMiohghMZsk'
+                />
                 <link rel='icon' href='/favicon.ico' type='image/x-icon' />
                 <link
                     rel='stylesheet'
