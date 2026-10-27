@@ -2,6 +2,11 @@
 
 Site institucional Echannel (`www.echannel.com.br`) — Next.js App Router, proxy Base Commerce em `/base-commerce/*`.
 
+## Git (branches)
+
+- **`develop`** — integração; abra PRs de feature **para `develop`** e faça merge aqui.
+- **`main`** — produção/release; **não** mergear features direto na `main`.
+
 ## Requisitos
 
 - Node.js **20.9+** (Next.js 16)
