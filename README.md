@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# site-echannel
 
-## Getting Started
+Site institucional Echannel (`www.echannel.com.br`) — Next.js App Router, proxy Base Commerce em `/base-commerce/*`.
 
-First, run the development server:
+## Requisitos
+
+- Node.js **20.9+** (Next.js 16)
+- **pnpm** 10.x
+
+## Desenvolvimento
+
+Com **pnpm** já no PATH (instalação standalone ou `npm i -g pnpm`):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Opcional — pin da versão via [Corepack](https://nodejs.org/api/corepack.html) (nem todo pacote Node no Linux inclui o binário `corepack`; no Arch/CachyOS use `sudo pacman -S nodejs-corepack` ou pnpm global):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+corepack enable
+corepack prepare pnpm@10.33.0 --activate
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Abra [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Comando | Descrição |
+|---------|-----------|
+| `pnpm dev` | Servidor de desenvolvimento (Turbopack padrão no Next 16) |
+| `pnpm build` | Build de produção |
+| `pnpm start` | Servir build |
+| `pnpm lint` | ESLint (flat config) |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy na Vercel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+A Vercel detecta **pnpm** pelo `pnpm-lock.yaml`. Detalhes: [docs/PACKAGE-MANAGER-VERCEL.md](./docs/PACKAGE-MANAGER-VERCEL.md).
 
-## Deploy on Vercel
+Variáveis: ver `.env.example` (`NEXT_PUBLIC_SITE_URL`, `BASE_COMMERCE_*_ORIGIN`, `INDEXNOW_API_KEY`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Documentação interna
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [BASE-COMMERCE-REWRITES.md](./docs/BASE-COMMERCE-REWRITES.md)
+- [IMPLEMENTATION-EPIC-SPRINTS.md](./docs/IMPLEMENTATION-EPIC-SPRINTS.md)
+- [HOME-MOCKUP-SPEC.md](./docs/HOME-MOCKUP-SPEC.md)
