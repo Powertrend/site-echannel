@@ -28,6 +28,8 @@ pnpm lint
 
 ## Vercel (site-echannel)
 
+**Proxy Base Commerce (Production):** [VERCEL-PRODUCTION-BASE-COMMERCE.md](./VERCEL-PRODUCTION-BASE-COMMERCE.md).
+
 1. **Não** commitar `package-lock.json` — só `pnpm-lock.yaml`.
 2. Build: usa `pnpm install` automaticamente quando existe `pnpm-lock.yaml`.
 3. Opcional (pin explícito): env `ENABLE_EXPERIMENTAL_COREPACK=1` + `packageManager` no `package.json` ([Configure a Build](https://vercel.com/docs/builds/configure-a-build#corepack)).

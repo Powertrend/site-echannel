@@ -43,7 +43,7 @@ Abra [http://localhost:3000](http://localhost:3000).
 
 A Vercel detecta **pnpm** pelo `pnpm-lock.yaml`. Detalhes: [docs/PACKAGE-MANAGER-VERCEL.md](./docs/PACKAGE-MANAGER-VERCEL.md).
 
-Variáveis: ver `.env.example` (`NEXT_PUBLIC_SITE_URL`, `BASE_COMMERCE_*_ORIGIN`, `INDEXNOW_API_KEY`).
+Variáveis: `.env.example`. **Production + proxy BC:** [VERCEL-PRODUCTION-BASE-COMMERCE.md](./docs/VERCEL-PRODUCTION-BASE-COMMERCE.md) (envs + redeploy + smoke).
 
 ## Documentação interna
 
