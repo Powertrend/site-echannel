@@ -6,40 +6,40 @@ export function buildWhatsAppUrl(message: string): string {
 }
 
 export const landingHero = {
-    title: 'O shopping digital inteligente está chegando.',
+    title: 'Hub de soluções para o comércio da sua PME.',
     subtitle:
-        'Descoberta por intenção, compra fluida e operação de mall — lojas, consumidores e shoppings no mesmo ecossistema Echannel.',
+        'Echannel reúne e-commerce, comércio de bairro e ferramentas digitais pensadas para pequenas e médias empresas venderem online e na vizinhança — com IA onde faz diferença.',
 } as const
 
 export const landingTracks = [
     {
-        id: 'lojista',
-        title: 'Sou lojista',
-        body: 'Operação e vendas dentro do mall digital: catálogo, fila, split financeiro e expedição integrada à doca.',
-        cta: 'Quero ser loja fundadora',
+        id: 'pme-ecommerce',
+        title: 'PME — e-commerce',
+        body: 'Loja virtual, catálogo, checkout e operação enxuta: soluções para quem quer vender na internet sem montar um departamento de TI.',
+        cta: 'Quero vender online',
         whatsappMessage:
-            'Olá! Sou lojista e quero ser loja fundadora no Echannel.',
+            'Olá! Tenho uma PME e quero soluções de e-commerce no Echannel.',
     },
     {
-        id: 'consumidor',
-        title: 'Quero comprar',
-        body: 'Experiência de shopping, não lista infinita: concierge, comparar, club VIP e retirada na baia.',
-        cta: 'Entrar na lista VIP',
+        id: 'comercio-bairro',
+        title: 'Comércio de bairro',
+        body: 'Digitalize a loja da esquina: vitrine local, retirada no balcão, divulgação no bairro e presença no hub — físico e digital juntos.',
+        cta: 'Fortalecer meu bairro',
         whatsappMessage:
-            'Olá! Quero entrar na lista VIP de abertura do Echannel.',
+            'Olá! Tenho comércio de bairro e quero entrar no hub Echannel.',
     },
     {
-        id: 'shopping',
-        title: 'Represento um shopping',
-        body: 'Digitalize a operação do empreendimento: torre de controle, tenants, doca e dados do ecossistema.',
+        id: 'polo-bairro',
+        title: 'Polo ou associação',
+        body: 'Para quem articula um eixo comercial: várias PMEs, praça de alimentação ou associação de lojistas — visão de hub e ferramentas compartilhadas.',
         cta: 'Falar com o time Echannel',
         whatsappMessage:
-            'Olá! Represento um shopping e quero falar sobre o Echannel.',
+            'Olá! Represento um polo ou associação de comércio de bairro e quero falar com o Echannel.',
     },
 ] as const
 
 export const landingCountdown = {
-    headline: 'Abertura do Echannel Jardins (preview)',
-    note: 'Consumidores: acesso antecipado. Lojistas e shoppings: vagas limitadas antes da abertura.',
+    headline: 'Novidades do hub Echannel (preview)',
+    note: 'PMEs e comércios de bairro: vagas limitadas na fase de abertura. Cadastre interesse antes do lançamento completo.',
     launchLabel: 'Prepare-se para o lançamento!',
 } as const

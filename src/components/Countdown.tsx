@@ -9,45 +9,38 @@ interface TimeLeft {
     seconds: number
 }
 
+function getTargetDate(): Date {
+    const startDate = new Date('2026-10-06T00:00:00')
+    const targetDate = new Date(startDate)
+    targetDate.setMonth(targetDate.getMonth() + 6)
+    targetDate.setHours(23, 59, 59, 0)
+    return targetDate
+}
+
+function calculateTimeLeft(targetDate: Date): TimeLeft {
+    const difference = targetDate.getTime() - Date.now()
+
+    if (difference > 0) {
+        return {
+            days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+            minutes: Math.floor((difference / 1000 / 60) % 60),
+            seconds: Math.floor((difference / 1000) % 60),
+        }
+    }
+
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 }
+}
+
 export default function Countdown() {
-    const [timeLeft, setTimeLeft] = useState<TimeLeft>({
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-    })
+    const [timeLeft, setTimeLeft] = useState<TimeLeft>(() =>
+        calculateTimeLeft(getTargetDate()),
+    )
 
     useEffect(() => {
-        // Lançamento em 6 meses a partir de out/2026
-        const startDate = new Date('2026-10-06T00:00:00')
-        const targetDate = new Date(startDate)
-        targetDate.setMonth(targetDate.getMonth() + 6)
-        targetDate.setHours(23, 59, 59, 0)
-
-        const calculateTimeLeft = (): TimeLeft => {
-            const now = new Date().getTime()
-            const difference = targetDate.getTime() - now
-
-            if (difference > 0) {
-                return {
-                    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                    minutes: Math.floor((difference / 1000 / 60) % 60),
-                    seconds: Math.floor((difference / 1000) % 60),
-                }
-            }
-
-            return { days: 0, hours: 0, minutes: 0, seconds: 0 }
-        }
-
-        // Calcular o tempo inicial
-        const initialTime = calculateTimeLeft()
-        setTimeLeft(initialTime)
-
-        // Configurar o timer
+        const targetDate = getTargetDate()
         const timer = setInterval(() => {
-            const newTime = calculateTimeLeft()
-            setTimeLeft(newTime)
+            setTimeLeft(calculateTimeLeft(targetDate))
         }, 1000)
 
         return () => clearInterval(timer)
@@ -58,7 +51,7 @@ export default function Countdown() {
     }
 
     return (
-        <div className='flex text-2xl sm:text-3xl md:text-4xl mb-4 drop-shadow-lg'>
+        <div className='mb-4 flex text-2xl drop-shadow-lg sm:text-3xl md:text-4xl'>
             <div className='mr-2'>
                 <span className='font-semibold'>
                     {formatNumber(timeLeft.days)}

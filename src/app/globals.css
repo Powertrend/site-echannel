@@ -2,34 +2,42 @@
 
 :root {
     --background: #ffffff;
-    --foreground: #171717;
+    --foreground: #0f172a;
+    --primary: #dc2626;
+    --primary-hover: #b91c1c;
+    --tertiary: #16a34a;
+    --tertiary-hover: #15803d;
+    --polo: #2563eb;
+    --polo-hover: #1d4ed8;
+    --neutral: #64748b;
+    --surface-muted: #f4f7fa;
+    --border-subtle: #e2e8f0;
 }
 
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-    --font-sans: var(--font-geist-sans);
-    --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
+    --color-primary: var(--primary);
+    --color-primary-hover: var(--primary-hover);
+    --color-tertiary: var(--tertiary);
+    --color-tertiary-hover: var(--tertiary-hover);
+    --color-polo: var(--polo);
+    --color-polo-hover: var(--polo-hover);
+    --color-neutral: var(--neutral);
+    --color-surface-muted: var(--surface-muted);
+    --color-border-subtle: var(--border-subtle);
+    --font-sans: var(--font-inter);
+    --font-heading: var(--font-outfit);
 }
 
 body {
     background: var(--background);
     color: var(--foreground);
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--font-inter), system-ui, sans-serif;
 }
 
-.hero-bg {
-    background-image: url('/charming-cute-woman-feels-happy-raises-palms-wears-striped-sweater-expresses-cheerful-dreamy-emotions.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+.font-heading {
+    font-family: var(--font-outfit), system-ui, sans-serif;
 }
 
 .sr-only {

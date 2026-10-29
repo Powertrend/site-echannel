@@ -1,30 +1,34 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Inter, Outfit } from 'next/font/google'
+import { JsonLd } from '../components/JsonLd'
+import { SiteHeader } from '../components/layout/SiteHeader'
+import { homeFaqsPtBr } from '../data/home-faq'
+import {
+    buildPageMetadata,
+    HOME_PAGE_SEO,
+} from '../../lib/seo/page-seo'
+import {
+    getFAQSchema,
+    getMinimalOrganizationSchema,
+    getSoftwareApplicationSchema,
+    getWebSiteSchema,
+} from '../../lib/seo/schemas'
+import 'material-symbols/outlined.css'
 import './globals.css'
 
-const geistSans = Geist({
-    variable: '--font-geist-sans',
+const inter = Inter({
+    variable: '--font-inter',
     subsets: ['latin'],
+    display: 'swap',
 })
 
-const geistMono = Geist_Mono({
-    variable: '--font-geist-mono',
+const outfit = Outfit({
+    variable: '--font-outfit',
     subsets: ['latin'],
+    display: 'swap',
 })
 
-const siteDescription =
-    'Para quem compra, vende ou opera um shopping. Descoberta com IA, lojas parceiras e operação integrada. Lista de abertura.'
-
-export const metadata: Metadata = {
-    title: 'Echannel — Shopping digital inteligente',
-    description: siteDescription,
-    openGraph: {
-        title: 'Echannel — Shopping digital inteligente',
-        description: siteDescription,
-        locale: 'pt_BR',
-        type: 'website',
-    },
-}
+export const metadata: Metadata = buildPageMetadata(HOME_PAGE_SEO)
 
 export default function RootLayout({
     children,
@@ -40,14 +44,29 @@ export default function RootLayout({
                 />
                 <link rel='icon' href='/favicon.ico' type='image/x-icon' />
                 <link
+                    rel='alternate'
+                    type='text/plain'
+                    href='/llms.txt'
+                    title='LLMs'
+                />
+                <link
                     rel='stylesheet'
                     href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
                 />
+                <JsonLd
+                    data={[
+                        getWebSiteSchema(),
+                        getMinimalOrganizationSchema(),
+                        getSoftwareApplicationSchema(),
+                        getFAQSchema(homeFaqsPtBr),
+                    ]}
+                />
             </head>
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                className={`${inter.variable} ${outfit.variable} antialiased`}
                 suppressHydrationWarning={true}
             >
+                <SiteHeader />
                 {children}
             </body>
         </html>
