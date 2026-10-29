@@ -1,76 +1,212 @@
-# Vercel Production — site-echannel + proxy Base Commerce
+---
+title: Vercel Production — proxy Base Commerce (site-echannel)
+audience: equipe echannel/site
+updated: 2026-10-29
+refs:
+  - BASE-COMMERCE-REWRITES.md
+  - ../base-commerce/docs/ECHANNEL-SITE-TEAM-BRIEF.md (monorepo BC)
+---
 
-Checklist para **echannel-site** (Production) passar a proxy `/base-commerce/*` para os deploys BC.
+# Vercel Production — site-echannel + proxy `/base-commerce/*`
 
-## 1. Variáveis (Production)
+Runbook para a equipe do **site** (`Powertrend/site`, projeto Vercel **echannel-site**) liberar API e admin Base Commerce em **`https://www.echannel.com.br/base-commerce/…`**.
 
-**Vercel → projeto `echannel-site` (ou site-echannel) → Settings → Environment Variables → Production**
+O monorepo **Base Commerce** (`Powertrend/base-commerce`) já está em Production nos projetos `base-commerce-api` e `base-commerce-admin`. **Este documento cobre só o que falta no site + git do site.**
 
-| Variável | Valor (MVP atual) |
-|----------|-------------------|
-| `BASE_COMMERCE_API_ORIGIN` | `https://base-commerce-api.vercel.app` |
-| `BASE_COMMERCE_ADMIN_ORIGIN` | `https://base-commerce-admin.vercel.app` |
-| `BASE_COMMERCE_STOREFRONT_ORIGIN` | `https://base-commerce-storefront.vercel.app` *(opcional no primeiro deploy — ver §3)* |
+---
 
-Sem barra no final. Também manter `NEXT_PUBLIC_SITE_URL=https://www.echannel.com.br` se ainda não estiver.
+## Resumo executivo
 
-Rewrites são lidos **no build** (`next.config.ts` → `baseCommerceRewrites()`). Depois de salvar envs:
+| Área | Status |
+|------|--------|
+| API BC (`base-commerce-api`) | Production OK — path `/base-commerce/api/*` na URL `.vercel.app` |
+| Admin BC (`base-commerce-admin`) | Production OK — `AUTH_URL` aponta para `www` (redirect canônico) |
+| **Site (`echannel-site`)** | **Pendente:** envs no build + código em **`main`** + redeploy Production |
 
-1. **Deployments → Production → Redeploy** (marque *Use existing Build Cache* **off** se quiser garantir config nova).
+Sintoma atual: `www.echannel.com.br/base-commerce/admin/login` → **404** da landing Next (rewrites **não** registrados no build).
 
-## 2. Código no ar (git)
+---
 
-| Passo | Ação |
-|-------|------|
-| A | Merge PR **feat → `develop`** (home Stitch + rewrites BC-S11.8) se ainda aberta |
-| B | PR **`develop` → `main`** e merge quando QA ok |
-| C | Production Vercel deve rastrear **`main`** atualizada (commit com `lib/base-commerce-rewrites.ts` + `next.config.ts`) |
+## O que mudou no código (repo site)
 
-Se Production ainda apontar para commit **anterior** aos rewrites, o proxy **não existe** mesmo com envs corretas.
+**Referência:** commit `2e3746a` (PR **#5** → `develop`).
 
-## 3. API + admin sem storefront (opcional)
+| Artefato | Mudança |
+|----------|---------|
+| `lib/base-commerce-rewrites.ts` | **Rewrites parciais:** basta `BASE_COMMERCE_API_ORIGIN` + `BASE_COMMERCE_ADMIN_ORIGIN`. Storefront **opcional**. |
+| `docs/VERCEL-PRODUCTION-BASE-COMMERCE.md` | Este runbook |
+| `docs/BASE-COMMERCE-REWRITES.md` | Matriz de paths + smoke |
+| `.env.example` | Comentários `BASE_COMMERCE_*_ORIGIN` |
+| `README.md`, `docs/PACKAGE-MANAGER-VERCEL.md` | Links para Production BC |
 
-Para liberar **só** API e admin antes da vitrine:
+**Contexto git**
+
+- PR **#4** (home Stitch) — já mergeada em **`develop`**.
+- PR **#5** — merge em **`develop`** (rewrites parciais + docs).
+- **Production ainda precisa** de PR **`develop` → `main`** com esses commits (hoje `main` pode estar só até PR #3, out/2025).
+
+---
+
+## Checklist — ordem obrigatória
+
+| # | Ação | Quem | Onde |
+|---|------|------|------|
+| 1 | Merge **PR #5** em `develop` | Site | GitHub `Powertrend/site` |
+| 2 | Abrir PR **`develop` → `main`**, merge após review | Site | GitHub |
+| 3 | Confirmar Vercel **Production Branch = `main`** | Site | Vercel → echannel-site → Settings → Git |
+| 4 | Cadastrar envs **Production** (§2) | Site | Vercel → Environment Variables |
+| 5 | **Redeploy Production** (ideal: **sem** cache de build) | Site | Deployments → … → Redeploy |
+| 6 | Smoke §5 | Site + BC | Browser / curl |
+
+Não é possível configurar envs/redeploy da Vercel pelo repo BC — **dashboard Vercel** do projeto **echannel-site**.
+
+---
+
+## 1. Variáveis de ambiente (Vercel)
+
+**Projeto:** `echannel-site` (domínio `www.echannel.com.br` / `echannel.com.br`).
+
+**Settings → Environment Variables → marcar Production** (Preview pode usar os mesmos valores ou URLs de Preview dos apps BC).
+
+| Variável | Tipo Vercel | Obrigatório (MVP) | Valor exemplo |
+|----------|-------------|-------------------|---------------|
+| `NEXT_PUBLIC_SITE_URL` | Config | Sim | `https://www.echannel.com.br` |
+| `BASE_COMMERCE_API_ORIGIN` | Config | Sim | `https://base-commerce-api.vercel.app` |
+| `BASE_COMMERCE_ADMIN_ORIGIN` | Config | Sim | `https://base-commerce-admin.vercel.app` |
+| `BASE_COMMERCE_STOREFRONT_ORIGIN` | Config | **Não** (MVP) | Omitir ou vazio até existir deploy storefront |
+
+Regras:
+
+- **Sem barra final** nos origins.
+- **Sensitive = off** (são URLs públicas, não secrets).
+- Rewrites são montados em **`next.config.ts` no build**. Alterar env **exige redeploy** com build novo.
+
+### MVP: só API + admin
 
 - Defina **apenas** `BASE_COMMERCE_API_ORIGIN` e `BASE_COMMERCE_ADMIN_ORIGIN`.
-- **Não** defina `BASE_COMMERCE_STOREFRONT_ORIGIN` (ou remova na Vercel).
-- Redeploy Production.
+- **Não** crie `BASE_COMMERCE_STOREFRONT_ORIGIN` (ou remova na Vercel).
+- Rotas `/base-commerce/demo/*` **não** proxy até incluir storefront.
 
-Rotas `/base-commerce/demo/*` e vitrine no domínio www **não** proxy até incluir storefront.
+### Comportamento legado (antes do PR #5)
 
-Implementação: `lib/base-commerce-rewrites.ts` registra rewrites **por origem** presente (não exige as três).
+Se Production ainda rodar commit antigo de `base-commerce-rewrites.ts` que exigia **as três** envs, faltando storefront → **nenhum** rewrite. Por isso o merge **#5** + **`develop`→`main`** é necessário.
 
-## 4. Smoke no browser (ordem)
+---
 
-1. **API direta (BC)** — deve responder antes de testar www:
-   - https://base-commerce-api.vercel.app/base-commerce/api  
-   - Esperado: resposta do app (ex. Hello World / health), não 404 Vercel.
+## 2. Contrato de proxy (destino)
 
-2. **Site com rewrites** — só depois de envs + redeploy + merge na branch de Production:
-   - https://www.echannel.com.br/base-commerce/api  
-   - https://www.echannel.com.br/base-commerce/admin/login  
+O site encaminha para os deploys BC **com o mesmo path público**:
 
-3. **Storefront** (quando env storefront configurado):
-   - https://www.echannel.com.br/base-commerce/demo/pt-BR  
+| Público (www) | Destino Vercel |
+|---------------|----------------|
+| `/base-commerce/api/:path*` | `{BASE_COMMERCE_API_ORIGIN}/base-commerce/api/:path*` |
+| `/base-commerce/admin/:path*` | `{BASE_COMMERCE_ADMIN_ORIGIN}/base-commerce/admin/:path*` |
+| `/base-commerce/:path*` | `{BASE_COMMERCE_STOREFRONT_ORIGIN}/base-commerce/:path*` *(só se env storefront)* |
 
-4. **Admin / auth** — se login redireciona errado:
-   - No projeto **base-commerce-admin**, `AUTH_URL` / callbacks devem usar `https://www.echannel.com.br/base-commerce/admin` em produção.
-   - Workaround temporário (não ideal): apontar auth para `*.vercel.app` só em homolog.
+Pré-requisitos no **BC** (time Base Commerce — já configurado em Production):
 
-Arquivos estáticos em `public/base-commerce/` (ex. Google verification) continuam servidos pelo Next **antes** dos rewrites.
+- API: `API_GLOBAL_PREFIX=base-commerce/api`
+- Admin: `NEXT_PUBLIC_BASE_PATH=/base-commerce/admin`
 
-## 5. curl rápido
+Arquivos em `public/base-commerce/` (ex. verificação Google) são servidos pelo site **antes** dos rewrites.
 
-```bash
-curl -sI "https://www.echannel.com.br/base-commerce/admin/login" | head -5
-curl -sS "https://base-commerce-api.vercel.app/base-commerce/api" | head -3
+---
+
+## 3. Git e branches (site)
+
+| Branch | Uso |
+|--------|-----|
+| `develop` | Integração; PRs de feature (incl. #4 Stitch, #5 rewrites) |
+| `main` | **Production Vercel** — deve conter rewrites parciais após release |
+
+Fluxo release:
+
+```text
+PR #5 → develop  →  PR develop → main  →  deploy Production automático
 ```
 
-## 6. Search Console
+---
 
-Por último no rollout geral — ver [SEO-GEO-IA-SEARCH-PLAN.md §7](./SEO-GEO-IA-SEARCH-PLAN.md).
+## 4. Admin / Auth (projeto BC — só revisão)
 
-## Referências
+Se após proxy o login “pula” para `echannel.com.br/login` (404 na landing), o ajuste é no projeto **`base-commerce-admin`**, não no site:
 
-- [BASE-COMMERCE-REWRITES.md](./BASE-COMMERCE-REWRITES.md)
-- `base-commerce/docs/DEPLOY-PRODUCTION-MVP.md` (monorepo BC)
+| Variável | Production (Config) |
+|----------|---------------------|
+| `AUTH_URL` | `https://www.echannel.com.br/base-commerce/admin` |
+| `GRAPHQL_URL` | `https://www.echannel.com.br/base-commerce/api/graphql` |
+| `NEXT_PUBLIC_BASE_PATH` | `/base-commerce/admin` |
+
+Fix de redirect no middleware admin: merge **PR #52/#53** no monorepo BC (já em `main`).
+
+**Workaround homolog:** testar admin direto em `https://base-commerce-admin.vercel.app/base-commerce/admin/login` só se `AUTH_URL` temporariamente apontar para `.vercel.app` — **não** usar em Production final.
+
+---
+
+## 5. Smoke tests (ordem)
+
+### 5.1 API BC direta (antes do www)
+
+Deve passar **antes** de culpar o site:
+
+```bash
+curl -sS "https://base-commerce-api.vercel.app/base-commerce/api"
+# Esperado: corpo tipo "Hello World!" (200)
+
+curl -sS -X POST "https://base-commerce-api.vercel.app/base-commerce/api/graphql" \
+  -H "Content-Type: application/json" \
+  -d '{"query":"{ health }"}'
+# Esperado: {"data":{"health":"ok"}}
+```
+
+### 5.2 Site com rewrites (após envs + redeploy + `main` atualizada)
+
+Use host canônico **`www`**:
+
+| Teste | URL | Esperado |
+|-------|-----|----------|
+| Admin login | https://www.echannel.com.br/base-commerce/admin/login | Tela de login BC (não 404 landing) |
+| API raiz | https://www.echannel.com.br/base-commerce/api | Resposta API (não HTML Next 404) |
+| GraphQL | `POST` https://www.echannel.com.br/base-commerce/api/graphql | JSON `{ health }` |
+
+```bash
+curl -sI "https://www.echannel.com.br/base-commerce/admin/login" | head -8
+curl -sS "https://www.echannel.com.br/base-commerce/api" | head -3
+```
+
+### 5.3 Storefront (depois)
+
+Com `BASE_COMMERCE_STOREFRONT_ORIGIN` + deploy storefront:
+
+- https://www.echannel.com.br/base-commerce/demo/pt-BR
+
+---
+
+## 6. Diagnóstico rápido
+
+| Sintoma | Causa provável |
+|---------|----------------|
+| 404 HTML “This page could not be found” (título Echannel) | Rewrites vazios: envs faltando no **build**, commit antigo em **main**, ou redeploy não feito |
+| `echannel.com.br/login?callbackUrl=…` | Admin `AUTH_URL` / middleware — ver §4 |
+| API `.vercel.app/…/base-commerce/api` OK, www falha | Só site — §1 e §5 |
+| `Cannot GET /` na API `.vercel.app` | Normal com prefixo — usar `/base-commerce/api` |
+
+---
+
+## 7. Referências cruzadas
+
+| Documento | Repo |
+|-----------|------|
+| [BASE-COMMERCE-REWRITES.md](./BASE-COMMERCE-REWRITES.md) | site |
+| [PACKAGE-MANAGER-VERCEL.md](./PACKAGE-MANAGER-VERCEL.md) | site |
+| `docs/ECHANNEL-SITE-TEAM-BRIEF.md` | base-commerce |
+| `docs/DEPLOY-PRODUCTION-MVP.md` | base-commerce |
+| `docs/VERCEL-SETUP-POWERTREND.md` | base-commerce (envs API/admin) |
+
+**Contato:** dúvidas de path público / OAuth / GraphQL → time Base Commerce; domínio, rewrites, landing → time site.
+
+---
+
+## 8. Search Console
+
+Após proxy estável — [SEO-GEO-IA-SEARCH-PLAN.md §7](./SEO-GEO-IA-SEARCH-PLAN.md).
