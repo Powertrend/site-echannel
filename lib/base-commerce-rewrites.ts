@@ -36,11 +36,15 @@ export function baseCommerceRewrites(): Rewrite[] {
   if (adminOrigin) {
     rewrites.push(
       {
-        source: `${PREFIX}/admin/:path*`,
-        destination: `${adminOrigin}${PREFIX}/admin/:path*`,
+        source: `${PREFIX}/admin/:path+`,
+        destination: `${adminOrigin}${PREFIX}/admin/:path+`,
       },
       {
         source: `${PREFIX}/admin`,
+        destination: `${adminOrigin}${PREFIX}/admin`,
+      },
+      {
+        source: `${PREFIX}/admin/`,
         destination: `${adminOrigin}${PREFIX}/admin`,
       },
     );
@@ -49,8 +53,8 @@ export function baseCommerceRewrites(): Rewrite[] {
   if (storefrontOrigin) {
     rewrites.push(
       {
-        source: `${PREFIX}/:path*`,
-        destination: `${storefrontOrigin}${PREFIX}/:path*`,
+        source: `${PREFIX}/:path+`,
+        destination: `${storefrontOrigin}${PREFIX}/:path+`,
       },
       {
         source: PREFIX,
